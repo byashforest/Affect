@@ -40,12 +40,16 @@ let canvas = createCanvas(size, size, WEBGL);
   canvas.elt.addEventListener("pointercancel", stopOrbit);
 
   const enableButton = createButton("Enable motion permission");
+  enableButton.parent("controls")
   enableButton.elt.addEventListener("click", enableMotion);
 
   startButton = createButton("Start 8 second capture");
-  startButton.mousePressed(startCapture);
+  startButton.parent("capture-button-area");
+  startButton.elt.addEventListener("click", startCapture);
 
   statusText = createP("Not recording");
+  statusText.parent("recording-status-area");
+  
 
   tableContainer = createDiv();
 }
@@ -213,7 +217,7 @@ function gaussianSmooth(data, widthMS) {
 }
 
 function draw() {
-  background(240);
+  background(18, 25, 34);
 
   let camX = viewDistance * cos(viewPitch) * sin(viewYaw);
   let camY = viewDistance * sin(viewPitch);
@@ -226,7 +230,7 @@ function draw() {
   );
 
   noFill();
-  stroke(30);
+  stroke(175, 199, 211);
   strokeWeight(2);
 
   beginShape();
