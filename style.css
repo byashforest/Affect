@@ -1,3 +1,9 @@
 body {
   margin: 0;
+  
+}
+#gesture-area {
+  width: 90%;
+  aspect-ratio: 1;
+  margin: 20px auto;
 }
