@@ -8,6 +8,7 @@ let wz = 0;
 
 let isRecording = false;
 let samples = [];
+let smoothedSamples =[];
 
 let recordingStartTime;
 
@@ -40,6 +41,7 @@ async function enableMotion() {
   ) {
 
     const permission = await DeviceMotionEvent.requestPermission();
+    statusText.html(`Motion permission: ${permission}`);
 
     if (permission === "granted") {
       window.addEventListener("devicemotion", handleMotion);
@@ -87,6 +89,7 @@ function handleMotion(event) {
 function startCapture() {
 
   samples = [];
+  //smoothedSamples = [];
 
   recordingStartTime = performance.now();
 
@@ -102,14 +105,15 @@ function startCapture() {
 function stopCapture() {
 
   isRecording = false;
+  smoothedSamples = gaussianSmooth(samples, 1000);
 
   statusText.html(
     `Finished! Captured ${samples.length} samples.`
   );
 
-  console.table(samples);
+  //console.table(samples);
 
-  showTable();
+  //showTable();
 }
 
 
@@ -148,6 +152,46 @@ function showTable() {
   tableContainer.html(html);
 }
 
+function gaussianSmooth(data, widthMS) {
+
+  let result = [];
+
+  let radius = widthMS / 2;
+  let sigma = widthMS / 6;
+
+  for (let sample of data) {
+    let sumAx = 0;
+    let sumAy = 0;
+    let sumAz = 0;
+    let totalWeight = 0;
+   for (let neighbor of data) {
+
+      let dt = neighbor.time - sample.time;
+
+      if (Math.abs(dt) > radius) {
+      continue;
+     }
+
+    let weight = Math.exp(-0.5 * (dt / sigma) ** 2);
+      sumAx += neighbor.ax * weight;
+      sumAy += neighbor.ay * weight;
+      sumAz += neighbor.az * weight;
+
+    totalWeight += weight;
+   }
+    result.push({
+    ...sample,
+    ax: sumAx / totalWeight,
+    ay: sumAy / totalWeight,
+    az: sumAz / totalWeight
+    });
+
+  }
+  return result;
+
+
+
+}
 
 function draw() {
   background(240);
@@ -160,7 +204,9 @@ function draw() {
 
   beginShape();
 
-  for (let sample of samples) {
+  for (let sample of smoothedSamples) {
+
+
     vertex(
       sample.ax * 40,
       sample.ay * 40,
