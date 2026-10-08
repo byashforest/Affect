@@ -16,9 +16,28 @@ let startButton;
 let statusText;
 let tableContainer;
 
+let viewYaw = 0;
+let viewPitch = -0.2;
+let viewDistance = 800;
+
+let activePointers = new Map();
+let lastPinchDistance = null;
+
+
 function setup() {
-  let canvas = createCanvas(windowWidth, 400, WEBGL);
+let gestureArea = document.getElementById("gesture-area");
+let size = gestureArea.clientWidth;
+
+let canvas = createCanvas(size, size, WEBGL);
+
   canvas.parent("gesture-area");
+
+  canvas.elt.style.touchAction = "none";
+
+  canvas.elt.addEventListener("pointerdown", startOrbit);
+  canvas.elt.addEventListener("pointermove", moveOrbit);
+  canvas.elt.addEventListener("pointerup", stopOrbit);
+  canvas.elt.addEventListener("pointercancel", stopOrbit);
 
   const enableButton = createButton("Enable motion permission");
   enableButton.elt.addEventListener("click", enableMotion);
@@ -196,7 +215,15 @@ function gaussianSmooth(data, widthMS) {
 function draw() {
   background(240);
 
-  orbitControl();
+  let camX = viewDistance * cos(viewPitch) * sin(viewYaw);
+  let camY = viewDistance * sin(viewPitch);
+  let camZ = viewDistance * cos(viewPitch) * cos(viewYaw);
+
+  camera(
+    camX, camY, camZ,
+   0, 0, 0,
+    0, 1, 0
+  );
 
   noFill();
   stroke(30);
@@ -215,4 +242,95 @@ function draw() {
   }
 
   endShape();
+}
+
+function startOrbit(event) {
+
+  if (event.pointerType === "mouse" && event.button !== 0) {
+    return;
+  }
+
+  if (activePointers.size >= 2) {
+    return;
+  }
+
+  activePointers.set(event.pointerId, {
+    x: event.clientX,
+    y: event.clientY
+  });
+
+  event.currentTarget.setPointerCapture(event.pointerId);
+
+  if (activePointers.size === 2) {
+    lastPinchDistance = getPinchDistance();
+  }
+}
+
+
+function moveOrbit(event) {
+
+  if (!activePointers.has(event.pointerId)) {
+    return;
+  }
+
+  let previous = activePointers.get(event.pointerId);
+
+  let deltaX = event.clientX - previous.x;
+  let deltaY = event.clientY - previous.y;
+
+  activePointers.set(event.pointerId, {
+    x: event.clientX,
+    y: event.clientY
+  });
+
+  if (activePointers.size === 1) {
+
+    viewYaw += deltaX * 0.008;
+
+    viewPitch = constrain(
+      viewPitch + deltaY * 0.008,
+      -PI / 3,
+      PI / 3
+    );
+
+  } else if (activePointers.size === 2) {
+
+    let pinchDistance = getPinchDistance();
+
+    if (lastPinchDistance !== null && pinchDistance > 0) {
+
+      viewDistance = constrain(
+        viewDistance * (lastPinchDistance / pinchDistance),
+        250,
+        1600
+      );
+    }
+
+    lastPinchDistance = pinchDistance;
+  }
+}
+
+
+function stopOrbit(event) {
+
+  if (!activePointers.has(event.pointerId)) {
+    return;
+  }
+
+  activePointers.delete(event.pointerId);
+
+  lastPinchDistance = null;
+}
+
+function getPinchDistance() {
+
+  let pointers = [...activePointers.values()];
+
+  let first = pointers[0];
+  let second = pointers[1];
+
+  return Math.hypot(
+    second.x - first.x,
+    second.y - first.y
+  );
 }
