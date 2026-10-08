@@ -1,14 +1,85 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8">
-  <title>Movement Tool</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
+  <div id="paper-page">
+
+
+  <header class="introduction">
+
+     <h1>Affect</h1>
+     
+    <p class="eyebrow">a little experiment in movement </p>
+
+
+    <p class="description">
+      Hold your phone in your hand.
+    </p>
+
+    <p class="instructions">
+      When you're ready, make a gesture. It can be small, slow, sudden, strange, whatever you like. 
+      
+    </p>
+
+  </header>
+
+  <div id="controls"></div>
+
   <div id="gesture-area"></div>
+  
+  <div id="capture-button-area"></div>
+
+  <div id="recording-status-area"></div>
+
+
+</div>
+
+  <section id="about-affect">
+    
+    <h2>A little more about Affect</h2>
+
+    <p> 
+    I'm Ash Forest, a dancer and transdisciplinary artist interested in the relationships between bodies, perception, and technology.
+    </p>
+      
+      
+    <p>
+    As a dancer, I've spent years paying attention to the nuances of movement. Not only where a body travels or what shapes it makes, but how it moves, and how it feels. The way momentum swells and crashes, the feeling of sudden pressure and friction, the difference between falling and letting yourself fall.
+    </p>
+
+    <p>
+    I'm fascinated by how much aliveness lives in these qualities, and how difficult they can be to communicate through conventional representations of movement.
+    </p>
+    
+    <p>
+    Affect began with a question: What if we could draw with the dynamics of our movements themselves, and save them to rediscover later?
+    </p>
+
+    <p>
+    Rather than asking you to trace a shape on a screen, Affect invites you to make a gesture and discover the shape of its changing motion. It's an experiment in using computation to see to the <i>how</i> of movement, making the fleeting qualities of a gesture tangible. Affect as artifact.
+    </p>
+
+
+    <h2>How it Works</h2>
+
+    <p>
+      Your phone contains tiny sensors that detect changes in acceleration and rotation.
+      Affect uses those signals to construct a three-dimensional trace of your gesture. As you move, the trace changes direction, curves, folds, or gathers according to the motion being recorded.
+      Each drawing becomes a record of the changing dynamics of your movement, something you can revisit, observe, and rediscover.
+      Affect doesn't try to identify what you're doing or assign meaning to your movements. It simply makes certain qualities of motion visible, leaving interpretation and discovery to you.
+    </p>
+    
+</section>
 
   <script src="https://cdn.jsdelivr.net/npm/p5@2.3.4/lib/p5.min.js"></script>
   <script src="sketch.js"></script>
