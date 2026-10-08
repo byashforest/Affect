@@ -1,9 +1,157 @@
+/* Page */
+
 body {
   margin: 0;
-  
+  min-height: 100vh;
+
+  background-color: #CEC8BC;
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+
+  color: #30312F;
+  font-family: Arial, sans-serif;
 }
+
+#paper-page {
+  background-color: #cbb39a;
+  background-image: url("images/paper.jpg");
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+
+  padding-bottom: 80px;
+}
+/* Introduction */
+
+.introduction {
+  padding: 48px 7% 30px;
+}
+
+.eyebrow {
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+  margin: 0 0 14px;
+}
+
+h1 {
+  font-family: "Courier New", monospace;
+  font-size: 32px;
+  font-weight: normal;
+  letter-spacing: -0.04em;
+  margin: 0 0 24px;
+}
+
+.description {
+  font-size: 15px;
+  line-height: 1.5;
+  max-width: 290px;
+  margin: 0 0 24px;
+}
+
+.instructions {
+  font-size: 13px;
+  line-height: 1.5;
+  max-width: 290px;
+  margin: 0;
+}
+
+/* Gesture window */
+
 #gesture-area {
-  width: 90%;
+  width: 75%;
   aspect-ratio: 1;
-  margin: 20px auto;
+  margin: 0 auto 48px;
+
+  background: #121922;
+  outline: 1px solid #444944;
+}
+
+#gesture-area canvas {
+  display: block;
+}
+
+/* Controls */
+
+button {
+  display: block;
+  width: 70%;
+  margin: 0 auto 48px;
+  padding: 15px;
+
+  background: rgba(225, 220, 209, 0.75);
+  color: #121922;
+
+  border: 1px solid #444944;
+  border-radius: 0;
+
+  font-family: "Courier New", monospace;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+button:active {
+  background: #B7B0A3;
+}
+
+/* Status */
+
+body > p {
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  text-align: center;
+  margin: 20px 0 60px;
+}
+
+.eyebrow {
+  margin-left: 2%;
+}
+
+h1 {
+  margin-left: 7%;
+}
+
+.description {
+  margin-left: 13%;
+}
+
+.instructions {
+  margin-left: 4%;
+}
+
+#about-affect {
+  background-color: #192129;
+  color: #ddd9d0;
+
+  padding: 70px 30px 100px;
+
+  font-family: Arial, sans-serif;
+  text-align: left;
+}
+
+#about-affect h2 {
+  max-width: 500px;
+  margin: 50px auto 28px;
+
+  font-family: "Courier New", monospace;
+  font-size: 21px;
+  font-weight: normal;
+  line-height: 1.4;
+  color: inherit;
+}
+
+#about-affect h2:first-child {
+  margin-top: 0;
+}
+
+#about-affect p {
+  max-width: 500px;
+  margin: 0 auto 26px;
+
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.75;
+  color: inherit;
 }
