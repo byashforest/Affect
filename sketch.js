@@ -9,17 +9,18 @@ let wz = 0;
 let isRecording = false;
 let samples = [];
 
-let recordingStartTime = 0;
+let recordingStartTime;
 
 let startButton;
 let statusText;
 let tableContainer;
 
 function setup() {
-  createCanvas(windowWidth, 300);
+  let canvas = createCanvas(windowWidth, 400, WEBGL);
+  canvas.parent("gesture-area");
 
   const enableButton = createButton("Enable motion permission");
-  enableButton.mousePressed(enableMotion);
+  enableButton.elt.addEventListener("click", enableMotion);
 
   startButton = createButton("Start 8 second capture");
   startButton.mousePressed(startCapture);
@@ -31,7 +32,7 @@ function setup() {
 
 
 async function enableMotion() {
-
+  statusText.html("Enable Motion function triggered");
   // iPhone / iPad Safari
   if (
     typeof DeviceMotionEvent !== "undefined" &&
@@ -149,16 +150,23 @@ function showTable() {
 
 
 function draw() {
-
   background(240);
 
-  textSize(20);
+  orbitControl();
 
-  text(`ax: ${ax.toFixed(3)}`, 20, 50);
-  text(`ay: ${ay.toFixed(3)}`, 20, 80);
-  text(`az: ${az.toFixed(3)}`, 20, 110);
+  noFill();
+  stroke(30);
+  strokeWeight(2);
 
-  text(`wx: ${wx.toFixed(3)}`, 20, 160);
-  text(`wy: ${wy.toFixed(3)}`, 20, 190);
-  text(`wz: ${wz.toFixed(3)}`, 20, 220);
+  beginShape();
+
+  for (let sample of samples) {
+    vertex(
+      sample.ax * 40,
+      sample.ay * 40,
+      sample.az * 40
+    );
+  }
+
+  endShape();
 }
