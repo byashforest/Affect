@@ -10,9 +10,9 @@ let isRecording = false;
 let samples = [];
 let smoothedSamples =[];
 let gesturePalette = [
-  [84, 0.025, 245, 0],
-  [75, 0.050, 250, 0],
-  [66, 0.075, 255, 0]
+  [84, 0.025, 245, 0.5],
+  [75, 0.050, 250, 0.5],
+  [66, 0.075, 255, 0.5]
 ]; 
 let recordingStartTime;
 let playbackStartTime = null;
@@ -315,17 +315,17 @@ function draw() {
 
     if (distance <= highlightWidth) {
       let strength = 1 - distance / highlightWidth;
+      let fadedPalette = highlightPalette.map(([l, c, h]) => [
+        l, c, h, strength
+     ]);
 
-    let highlightSampleColor = getGestureColor(
+    stroke(getGestureColor(
       sample.time,
       startTime,
       endTime,
-      highlightPalette
-    );
+      fadedPalette
+    ));
 
-    highlightSampleColor.setAlpha(strength);
-
-    stroke(highlightSampleColor);
       vertex(
         sample.ax * 40,
         sample.ay * 40,
