@@ -9,8 +9,13 @@ let wz = 0;
 let isRecording = false;
 let samples = [];
 let smoothedSamples =[];
-
+let gesturePalette = [
+  [84, 0.025, 245, 0],
+  [75, 0.050, 250, 0],
+  [66, 0.075, 255, 0]
+]; 
 let recordingStartTime;
+let playbackStartTime = null;
 
 let startButton;
 let statusText;
@@ -29,6 +34,7 @@ let gestureArea = document.getElementById("gesture-area");
 let size = gestureArea.clientWidth;
 
 let canvas = createCanvas(size, size, WEBGL);
+  colorMode(OKLCH, 100, 0.4, 360, 1);
 
   canvas.parent("gesture-area");
 
@@ -112,7 +118,8 @@ function handleMotion(event) {
 function startCapture() {
 
   samples = [];
-  //smoothedSamples = [];
+  smoothedSamples = [];
+  playbackStartTime = null;
 
   recordingStartTime = performance.now();
 
@@ -129,6 +136,7 @@ function stopCapture() {
 
   isRecording = false;
   smoothedSamples = gaussianSmooth(samples, 1000);
+  playbackStartTime = performance.now();
 
   statusText.html(
     `Finished! Captured ${samples.length} samples.`
@@ -216,8 +224,35 @@ function gaussianSmooth(data, widthMS) {
 
 }
 
+function getGestureColor(time, startTime, endTime, palette = gesturePalette) {
+
+  let duration = endTime - startTime;
+
+  if (duration <= 0) {
+    return color(...palette[0]); 
+  }
+
+  let progress = (time - startTime) / duration;
+
+  progress = constrain(progress, 0, 1);
+
+  if (progress <= 0.5) {
+    return lerpColor(
+      color(...palette[0]),
+      color(...palette[1]),
+      progress * 2
+    );
+  } else {
+    return lerpColor(
+      color(...palette[1]),
+      color(...palette[2]),
+      (progress - 0.5) * 2
+    );
+  }
+}
+
 function draw() {
-  background(18, 25, 34);
+  background(12, 0.015, 260);
 
   let camX = viewDistance * cos(viewPitch) * sin(viewYaw);
   let camY = viewDistance * sin(viewPitch);
@@ -228,16 +263,37 @@ function draw() {
    0, 0, 0,
     0, 1, 0
   );
-
+  
+  if (smoothedSamples.length < 2) {
+  return;
+}
   noFill();
-  stroke(175, 199, 211);
-  strokeWeight(2);
+  let startTime = smoothedSamples[0].time;
+  let endTime = smoothedSamples[smoothedSamples.length - 1].time;
+  let duration = endTime - startTime;
+
+  if (duration <= 0 || playbackStartTime === null) {
+    return;
+  }
+
+  let elapsed = performance.now() - playbackStartTime;
+
+  let playbackTime = startTime + (elapsed % duration);
+    strokeWeight(.5
+    );
+  let highlightWidth = 50;
+  let highlightPalette = gesturePalette.map(([l, c, h]) => [
+  Math.min(l + 12, 100),
+  c,
+  h,
+  1
+]);
 
   beginShape();
 
   for (let sample of smoothedSamples) {
 
-
+    stroke(getGestureColor(sample.time, startTime, endTime));
     vertex(
       sample.ax * 40,
       sample.ay * 40,
@@ -246,6 +302,40 @@ function draw() {
   }
 
   endShape();
+
+  // Traveling highlight
+
+  strokeWeight(.7);
+
+  beginShape();
+
+  for (let sample of smoothedSamples) {
+
+    let distance = Math.abs(sample.time - playbackTime);
+
+    if (distance <= highlightWidth) {
+      let strength = 1 - distance / highlightWidth;
+
+    let highlightSampleColor = getGestureColor(
+      sample.time,
+      startTime,
+      endTime,
+      highlightPalette
+    );
+
+    highlightSampleColor.setAlpha(strength);
+
+    stroke(highlightSampleColor);
+      vertex(
+        sample.ax * 40,
+        sample.ay * 40,
+        sample.az * 40
+      );
+
+    }
+}
+
+endShape();
 }
 
 function startOrbit(event) {
