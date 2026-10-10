@@ -1,3 +1,9 @@
+@font-face {
+  font-family: Areal;
+  src: url("fonts/ABCArealSuperfamilyVariable.woff2") format("woff2");
+  font-display: swap;
+}
+
 /* Page */
 
 body {
@@ -10,7 +16,7 @@ body {
   background-repeat: no-repeat;
 
   color: #30312F;
-  font-family: Arial, sans-serif;
+  font-family: Areal, Arial, sans-serif;
 }
 
 #paper-page {
@@ -31,7 +37,7 @@ body {
 .eyebrow {
   font-family: "Courier New", monospace;
   font-size: 12px;
-  letter-spacing: 0;
+  letter-spacing: .5;
   text-transform: none;
   margin: 0 0 14px;
 }
@@ -40,11 +46,13 @@ h1 {
   font-family: "Courier New", monospace;
   font-size: 32px;
   font-weight: normal;
-  letter-spacing: -0.04em;
+  letter-spacing: .02em;
   margin: 0 0 24px;
 }
 
 .description {
+  font-family: Areal, Arial, sans-serif;
+  font-variation-settings: "MONO" 75;
   font-size: 15px;
   line-height: 1.5;
   max-width: 290px;
@@ -52,6 +60,8 @@ h1 {
 }
 
 .instructions {
+  font-family: Areal, Arial, sans-serif;
+  font-variation-settings: "MONO" 75;
   font-size: 13px;
   line-height: 1.5;
   max-width: 290px;
@@ -65,7 +75,7 @@ h1 {
   aspect-ratio: 1;
   margin: 0 auto 48px;
 
-  background: #121922;
+  background: #111A24;
   outline: 1px solid #444944;
 }
 
@@ -127,7 +137,7 @@ h1 {
 
   padding: 70px 30px 100px;
 
-  font-family: Arial, sans-serif;
+  font-family: Areal, Arial, sans-serif;
   text-align: left;
 }
 
@@ -153,5 +163,5 @@ h1 {
   font-family: Arial, sans-serif;
   font-size: 16px;
   line-height: 1.75;
-  color: inherit;
+   color: #b9b6ae;
 }
