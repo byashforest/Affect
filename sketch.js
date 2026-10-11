@@ -91,7 +91,11 @@ async function enableMotion() {
 
 
 function handleMotion(event) {
-
+  if (!isRecording && !isPreparing) {
+  statusText.html(
+    `Motion received · acceleration x: ${event.acceleration?.x ?? "missing"}`
+    );
+  }
   // Live sensor values
   ax = event.acceleration?.x ?? 0;
   ay = event.acceleration?.y ?? 0;
