@@ -5,6 +5,9 @@
 }
 
 /* Page */
+:root {
+  --paper-line-spacing: 9.9vw;
+}
 
 body {
   margin: 0;
@@ -15,14 +18,14 @@ body {
   background-position: center top;
   background-repeat: no-repeat;
 
-  color: #30312F;
+  color: #1C1E1D;
   font-family: Areal, Arial, sans-serif;
 }
 
 #paper-page {
   background-color: #cbb39a;
   background-image: url("images/paper.jpg");
-  background-size: cover;
+  background-size: 155% auto;
   background-position: -35px top;
   background-repeat: no-repeat;
 
@@ -32,6 +35,13 @@ body {
 
 .introduction {
   padding: 48px 7% 30px;
+
+ background: radial-gradient(
+  ellipse at 35% 50%,
+  rgba(165, 112, 76, 0.25) 0%,
+  rgba(165, 112, 76, 0.12) 45%,
+  transparent 80%
+);
 }
 
 .eyebrow {
@@ -54,7 +64,8 @@ h1 {
   font-family: Areal, Arial, sans-serif;
   font-variation-settings: "MONO" 75;
   font-size: 15px;
-  line-height: 1.5;
+  line-height: var(--paper-line-spacing);
+  transform: translateY(9vw);
   max-width: 290px;
   margin: 0 0 24px;
 }
@@ -63,7 +74,8 @@ h1 {
   font-family: Areal, Arial, sans-serif;
   font-variation-settings: "MONO" 75;
   font-size: 13px;
-  line-height: 1.5;
+  line-height: var(--paper-line-spacing);
+  transform: translateY(4vw);
   max-width: 290px;
   margin: 0;
 }
@@ -143,6 +155,7 @@ h1 {
   color: #ddd9d0;
 
   padding: 70px 30px 100px;
+  transform: translateY(-40px);
 
   font-family: Areal, Arial, sans-serif;
   text-align: left;
