@@ -7,6 +7,7 @@ let wy = 0;
 let wz = 0;
 
 let isRecording = false;
+let isPreparing = false;
 let samples = [];
 let smoothedSamples =[];
 let gesturePalette = [
@@ -31,12 +32,16 @@ let lastPinchDistance = null;
 
 function setup() {
 let gestureArea = document.getElementById("gesture-area");
+
+gestureArea.style.display = "block";
 let size = gestureArea.clientWidth;
+gestureArea.style.display = "none";
 
 let canvas = createCanvas(size, size, WEBGL);
   colorMode(OKLCH, 100, 0.4, 360, 1);
 
   canvas.parent("gesture-area");
+  gestureArea.style.display = "none";
 
   canvas.elt.style.touchAction = "none";
 
@@ -45,7 +50,7 @@ let canvas = createCanvas(size, size, WEBGL);
   canvas.elt.addEventListener("pointerup", stopOrbit);
   canvas.elt.addEventListener("pointercancel", stopOrbit);
 
-  const enableButton = createButton("Enable motion access");
+  const enableButton = createButton("Enable motion permission");
   enableButton.parent("controls")
   enableButton.elt.addEventListener("click", enableMotion);
 
@@ -117,6 +122,32 @@ function handleMotion(event) {
 
 function startCapture() {
 
+  if (isPreparing || isRecording) return;
+  document.getElementById("gesture-area").style.display = "none";
+
+  isPreparing = true;
+
+  let secondsLeft = 5;
+
+  startButton.html(`Get ready · ${secondsLeft}`);
+
+  const countdown = setInterval(() => {
+
+    secondsLeft--;
+
+    if (secondsLeft > 0) {
+      startButton.html(`Get ready · ${secondsLeft}`);
+    } else {
+      clearInterval(countdown);
+      isPreparing = false;
+      beginRecording();
+    }
+
+  }, 1000);
+}
+
+function beginRecording() {
+
   samples = [];
   smoothedSamples = [];
   playbackStartTime = null;
@@ -125,12 +156,25 @@ function startCapture() {
 
   isRecording = true;
 
-  statusText.html("Recording...");
   tableContainer.html("");
 
-  setTimeout(stopCapture, 8000);
-}
+  let secondsLeft = 8;
 
+  startButton.html(`Recording · ${secondsLeft}`);
+
+  const countdown = setInterval(() => {
+
+    secondsLeft--;
+
+    if (secondsLeft > 0) {
+      startButton.html(`Recording · ${secondsLeft}`);
+    } else {
+      clearInterval(countdown);
+      stopCapture();
+    }
+
+  }, 1000);
+}
 
 function stopCapture() {
 
@@ -145,6 +189,8 @@ function stopCapture() {
   //console.table(samples);
 
   //showTable();
+  startButton.html("Begin another recording");
+  document.getElementById("gesture-area").style.display = "block";
 }
 
 
