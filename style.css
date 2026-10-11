@@ -4,6 +4,16 @@
   font-display: swap;
 }
 
+@keyframes gesture-reveal {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 /* Page */
 :root {
   --paper-line-spacing: 9.9vw;
@@ -29,12 +39,13 @@ body {
   background-position: -35px top;
   background-repeat: no-repeat;
 
-  padding-bottom: 80px;
+  padding-bottom: 0px;
 }
 /* Introduction */
 
 .introduction {
   padding: 48px 7% 30px;
+  text-align: center;
 
  background: radial-gradient(
   ellipse at 35% 50%,
@@ -48,7 +59,7 @@ body {
   font-family: "Courier New", monospace;
   font-size: 12px;
   letter-spacing: .5;
-  text-transform: none;
+  transform: translateY(-1vw);
   margin: 0 0 14px;
 }
 
@@ -74,6 +85,8 @@ h1 {
   font-family: Areal, Arial, sans-serif;
   font-variation-settings: "MONO" 75;
   font-size: 13px;
+  opacity: .7;
+  text-align: center;
   line-height: var(--paper-line-spacing);
   transform: translateY(4vw);
   max-width: 290px;
@@ -85,11 +98,14 @@ h1 {
 #gesture-area {
   width: 75%;
   aspect-ratio: 1;
-  margin: 0 auto 48px;
+  margin: 0 auto 24px;
+  display: none;
 
   background: #111A24;
-  outline: 1px solid #444944;
+  border: 1px solid #758D86;
+  animation: gesture-reveal 700ms ease-out;
 }
+
 
 #gesture-area canvas {
   display: block;
@@ -100,7 +116,7 @@ h1 {
 button {
   display: block;
   width: 70%;
-  margin: 0 auto 48px;
+  margin: 0 auto 24px;
   padding: 15px;
 
   background: rgba(225, 220, 209, 0.75);
@@ -131,7 +147,7 @@ body > p {
   font-family: "Courier New", monospace;
   font-size: 12px;
   text-align: center;
-  margin: 20px 0 60px;
+  margin: 20px 0 24px;
 }
 
 .eyebrow {
@@ -154,9 +170,10 @@ h1 {
   background-color: #192129;
   color: #ddd9d0;
 
-  padding: 70px 30px 100px;
-  transform: translateY(-40px);
-
+  margin-top: -40px;
+  padding: 110px 30px 100px;
+}
+#about-affect h1{
   font-family: Areal, Arial, sans-serif;
   text-align: left;
 }
@@ -180,8 +197,9 @@ h1 {
   max-width: 500px;
   margin: 0 auto 26px;
 
-  font-family: Arial, sans-serif;
-  font-size: 16px;
+  font-family: Areal, Arial, sans-serif;
+  font-variation-settings: "MONO" 75;
+  font-size: 15px;
   line-height: 1.75;
    color: #b9b6ae;
 }
