@@ -45,11 +45,11 @@ let canvas = createCanvas(size, size, WEBGL);
   canvas.elt.addEventListener("pointerup", stopOrbit);
   canvas.elt.addEventListener("pointercancel", stopOrbit);
 
-  const enableButton = createButton("Enable motion permission");
+  const enableButton = createButton("Enable motion access");
   enableButton.parent("controls")
   enableButton.elt.addEventListener("click", enableMotion);
 
-  startButton = createButton("Start 8 second capture");
+  startButton = createButton("Begin 8-second recording");
   startButton.parent("capture-button-area");
   startButton.elt.addEventListener("click", startCapture);
 
