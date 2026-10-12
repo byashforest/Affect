@@ -205,6 +205,10 @@ body > p {
   margin: 20px 0 24px;
 }
 
+html {
+  touch-action: manipulation;
+}
+
 .eyebrow {
   margin-left: 2%;
 }
