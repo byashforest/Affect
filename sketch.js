@@ -19,8 +19,11 @@ let recordingStartTime;
 let playbackStartTime = null;
 
 let startButton;
+let expandButton;
+
 let statusText;
 let tableContainer;
+
 
 let viewYaw = 0;
 let viewPitch = -0.2;
@@ -69,9 +72,60 @@ let canvas = createCanvas(size, size, WEBGL);
   
 
   tableContainer = createDiv();
+
+ 
+  
+  expandButton = createButton("Expand");
+  expandButton.parent("gesture-area");
+  expandButton.class("expand-view-button");
+  expandButton.elt.addEventListener("click", toggleExpandedView);
+
+  
+
   let resetButton = createButton("Reset view");
+  resetButton.class("reset-view-button");
   resetButton.parent("gesture-area");
   resetButton.elt.addEventListener("click", resetView);
+}
+
+function toggleExpandedView() {
+  let gestureArea = document.getElementById("gesture-area");
+  let previousBounds = gestureArea.getBoundingClientRect();
+  let expanded = gestureArea.classList.toggle("is-expanded");
+
+  expandButton.html(expanded ? "Close" : "Expand");
+  document.body.style.overflow = expanded ? "hidden" : "";
+
+  let canvasWidth = gestureArea.clientWidth;
+  let canvasHeight = expanded
+  ? gestureArea.clientHeight
+  : canvasWidth;
+
+  resizeCanvas(canvasWidth, canvasHeight);
+  let newBounds = gestureArea.getBoundingClientRect();
+
+let offsetX = previousBounds.left - newBounds.left;
+let offsetY = previousBounds.top - newBounds.top;
+
+let scaleX = previousBounds.width / newBounds.width;
+let scaleY = previousBounds.height / newBounds.height;
+
+  gestureArea.animate(
+    [
+      {
+        transformOrigin: "top left",
+        transform: `translate(${offsetX}px, ${offsetY}px) scale(${scaleX}, ${scaleY})`
+      },
+      {
+        transformOrigin: "top left",
+        transform: "translate(0, 0) scale(1, 1)"
+      }
+    ],
+    {
+      duration: 200,
+      easing: "ease-in-out"
+    }
+  );
 }
 
 function resetView() {
