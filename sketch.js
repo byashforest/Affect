@@ -25,6 +25,12 @@ let tableContainer;
 let viewYaw = 0;
 let viewPitch = -0.2;
 let viewDistance = 800;
+let gestureRadius = 0;
+let maxViewDistance = 1600;
+let minViewDistance = 250;
+let viewTargetX = 0;
+let viewTargetY = 0;
+let viewTargetZ = 0;
 
 let activePointers = new Map();
 let lastPinchDistance = null;
@@ -63,8 +69,20 @@ let canvas = createCanvas(size, size, WEBGL);
   
 
   tableContainer = createDiv();
+  let resetButton = createButton("Reset view");
+  resetButton.parent("gesture-area");
+  resetButton.elt.addEventListener("click", resetView);
 }
 
+function resetView() {
+  viewYaw = 0;
+  viewPitch = -0.2;
+  viewDistance = 800;
+
+  viewTargetX = 0;
+  viewTargetY = 0;
+  viewTargetZ = 0;
+}
 
 async function enableMotion() {
   statusText.html("Enable Motion function triggered");
@@ -91,11 +109,7 @@ async function enableMotion() {
 
 
 function handleMotion(event) {
-  if (!isRecording && !isPreparing) {
-  statusText.html(
-    `Motion received · acceleration x: ${event.acceleration?.x ?? "missing"}`
-    );
-  }
+  
   // Live sensor values
   ax = event.acceleration?.x ?? 0;
   ay = event.acceleration?.y ?? 0;
@@ -184,6 +198,20 @@ function stopCapture() {
 
   isRecording = false;
   smoothedSamples = gaussianSmooth(samples, 1000);
+  gestureRadius = 0;
+    for (let sample of smoothedSamples) {
+      let distance = Math.hypot(
+        sample.ax * 40,
+        sample.ay * 40,
+        sample.az * 40
+      );
+
+      gestureRadius = Math.max(gestureRadius, distance);
+    }
+
+  resetView();
+  minViewDistance = 0.1;
+  maxViewDistance = Math.max(1600, gestureRadius * 4.2);
   playbackStartTime = performance.now();
 
   statusText.html(
@@ -303,20 +331,27 @@ function getGestureColor(time, startTime, endTime, palette = gesturePalette) {
 
 function draw() {
   background(12, 0.015, 260);
+  perspective(
+    PI / 3,
+    width / height,
+    1,
+    maxViewDistance + gestureRadius + 1000
+  );
 
-  let camX = viewDistance * cos(viewPitch) * sin(viewYaw);
-  let camY = viewDistance * sin(viewPitch);
-  let camZ = viewDistance * cos(viewPitch) * cos(viewYaw);
+ let camX = viewTargetX + viewDistance * cos(viewPitch) * sin(viewYaw);
+  let camY = viewTargetY + viewDistance * sin(viewPitch);
+  let camZ = viewTargetZ + viewDistance * cos(viewPitch) * cos(viewYaw);
 
   camera(
     camX, camY, camZ,
-   0, 0, 0,
+    viewTargetX, viewTargetY, viewTargetZ,
     0, 1, 0
   );
   
   if (smoothedSamples.length < 2) {
   return;
-}
+  }
+
   noFill();
   let startTime = smoothedSamples[0].time;
   let endTime = smoothedSamples[smoothedSamples.length - 1].time;
@@ -438,6 +473,26 @@ function moveOrbit(event) {
     );
 
   } else if (activePointers.size === 2) {
+     let panX = deltaX / 2;
+    let panY = deltaY / 2;
+
+    let panScale = (
+      2 * viewDistance * Math.tan(Math.PI / 6)
+    ) / height;
+
+    viewTargetX -= panScale * (
+      panX * cos(viewYaw)
+      - panY * sin(viewPitch) * sin(viewYaw)
+    );
+
+    viewTargetY -= panScale * (
+      panY * cos(viewPitch)
+    );
+
+    viewTargetZ -= panScale * (
+      -panX * sin(viewYaw)
+      - panY * sin(viewPitch) * cos(viewYaw)
+    );
 
     let pinchDistance = getPinchDistance();
 
@@ -445,8 +500,8 @@ function moveOrbit(event) {
 
       viewDistance = constrain(
         viewDistance * (lastPinchDistance / pinchDistance),
-        250,
-        1600
+        minViewDistance,
+        maxViewDistance
       );
     }
 
