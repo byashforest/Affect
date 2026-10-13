@@ -46,6 +46,7 @@ gestureArea.style.display = "block";
 let size = gestureArea.clientWidth;
 gestureArea.style.display = "none";
 
+
 let canvas = createCanvas(size, size, WEBGL);
   colorMode(OKLCH, 100, 0.4, 360, 1);
 

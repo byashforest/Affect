@@ -95,8 +95,21 @@
     
 </section>
 
-  <script src="https://cdn.jsdelivr.net/npm/p5@2.3.4/lib/p5.min.js"></script>
-  <script src="sketch.js"></script>
+
+
+<script>
+  if (typeof Object.hasOwn !== "function") {
+    Object.hasOwn = function (object, property) {
+      return Object.prototype.hasOwnProperty.call(object, property);
+    };
+  }
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/core-js-bundle@3.50.0/minified.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/p5@2.3.4/lib/p5.min.js"></script>
+<script src="sketch.js"></script>
 
 </body>
 </html>
